@@ -1,6 +1,7 @@
 package com.theone.mapsapplocation
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,9 +12,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.theone.mapsapplocation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         map = googleMap
         enableMyLocation()
         createMarker()
+        // POLIGONOS
         createPolylines()
     }
 
@@ -59,8 +59,30 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .add(LatLng( 40.41926296230622,  -3.701287508010864))
             .add(LatLng( 40.419173113350965, -3.7048280239105225))
             .add(LatLng(40.419173113350965,-3.705976009368897))
+            .width(30f)
+            .color(ContextCompat.getColor(this, R.color.kotlin))
 
         val polyline = map.addPolyline(polylineOptions)
+
+        polyline.isClickable = true
+
+        map.setOnPolylineClickListener {
+            changeColor(it)
+        }
+
+        /*polyline.startCap = RoundCap()
+        polyline.endCap = CustomCap(BitmapDescriptorFactory.fromResource(R.drawable.hexagram))*/
+    }
+
+    private fun changeColor(it: Polyline) {
+        val color: Int = (0..3).random()
+
+        when(color){
+            0 -> it.color = ContextCompat.getColor(this, R.color.kotlin)
+            1 -> it.color = ContextCompat.getColor(this, R.color.black)
+            2 -> it.color = ContextCompat.getColor(this, R.color.purple_700)
+            3 -> it.color = ContextCompat.getColor(this, R.color.teal_700)
+        }
     }
 
     private fun createMarker() {
@@ -80,6 +102,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         Manifest.permission.ACCESS_FINE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 
+    @SuppressLint("MissingPermission")
     private fun enableMyLocation() {
         if (!::map.isInitialized) return
         if (isPermissionsGranted()) {
@@ -100,6 +123,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
