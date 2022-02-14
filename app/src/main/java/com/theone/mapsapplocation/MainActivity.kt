@@ -13,6 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.theone.mapsapplocation.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -29,8 +30,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
         createFragment()
+
     }
 
 
@@ -38,12 +39,28 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         enableMyLocation()
         createMarker()
+        createPolylines()
+    }
+
+    private fun createPolylines(){
+        val polylineOptions = PolylineOptions()
+            .add(LatLng(40.419173113350965,-3.705976009368897))
+            .add(LatLng( 40.4150807746539, -3.706072568893432))
+            .add(LatLng( 40.41517062907432, -3.7012016773223873))
+            .add(LatLng( 40.41713105928677, -3.7037122249603267))
+            .add(LatLng( 40.41926296230622,  -3.701287508010864))
+            .add(LatLng( 40.419173113350965, -3.7048280239105225))
+            .add(LatLng(40.419173113350965,-3.705976009368897))
+
+        val polyline = map.addPolyline(polylineOptions)
     }
 
     private fun createMarker() {
